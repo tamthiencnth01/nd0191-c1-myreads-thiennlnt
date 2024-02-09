@@ -10,37 +10,40 @@ export default function Search(props) {
   const [searchedBook, setSearchedBook] = useState([])
   //ThienNLNT make source code
   const history = useHistory()
-
   //ThienNLNT make source code
   const setDefaultBoxs = (searchedLocal, selectedBook) => {
-    return searchedLocal.map((book) => {
-      for (let i = 0; i < selectedBook.length; i++) {
-        if (selectedBook[i].id === book.id) {
-          return { ...book, shelf: selectedBook[i].shelf }
-        }
+    let updatedBooks = searchedLocal.map((book) => {
+      const selected = selectedBook.find(
+        (selected) => selected.title === book.title,
+      )
+      if (selected) {
+        return { ...book, shelf: selected.shelf }
+      } else {
+        return { ...book, shelf: 'none' }
       }
-      return { ...book, shelf: 'none' }
     })
+
+    return updatedBooks // Trả về danh sách sách đã được cập nhật
   }
 
   //ThienNLNT make source code
-  const handleWhenInputTextSearch = (event) => {
-    if (textInput.length !== 0) {
-      BooksAPI.search(textInput).then((searchedBook) => {
-        if (!searchedBook.error) {
-          BooksAPI.getAll().then((selectedBook) => {
-            setSearchedBook(setDefaultBoxs(searchedBook, selectedBook))
-          })
-        } else {
-          setSearchedBook([])
-        }
-      })
-    } else if (textInput.length === 0) {
-      setSearchedBook([])
-    }
-  }
-  //ThienNLNT make source code
   useEffect(() => {
+    //ThienNLNT make source code
+    const handleWhenInputTextSearch = (event) => {
+      if (textInput.length !== 0) {
+        BooksAPI.search(textInput).then((searchedBook) => {
+          if (!searchedBook.error) {
+            BooksAPI.getAll().then((selectedBook) => {
+              setSearchedBook(setDefaultBoxs(searchedBook, selectedBook))
+            })
+          } else {
+            setSearchedBook([])
+          }
+        })
+      } else if (textInput.length === 0) {
+        setSearchedBook([])
+      }
+    }
     handleWhenInputTextSearch()
   }, [textInput])
   return (

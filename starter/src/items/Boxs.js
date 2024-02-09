@@ -4,6 +4,7 @@ import Book from '../items/Book'
 export default function Boxs(props) {
   //ThienNLNT make source code
   const { book, title, setNewBook } = props
+
   //ThienNLNT make source code
   return (
     <div className="bookshelf">
